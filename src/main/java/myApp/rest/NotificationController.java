@@ -2,6 +2,7 @@ package myApp.rest;
 
 import jakarta.validation.Valid;
 import myApp.dto.requestDto.RequestDto;
+import myApp.dto.responseDto.ResponseDto;
 import myApp.service.dto.NotificationServiceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,8 @@ public class NotificationController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<Void> sendNotification(@Valid @RequestBody RequestDto requestDto) {
-        notificationServiceDto.sendNotification(requestDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseDto> sendNotification(@Valid @RequestBody RequestDto requestDto) {
+        ResponseDto responseDto = notificationServiceDto.sendNotification(requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 }

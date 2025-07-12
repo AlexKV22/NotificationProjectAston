@@ -1,6 +1,8 @@
 package myApp.exceptionHandler;
 
+import myApp.exceptions.MailSendException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,5 +26,10 @@ public class NotificationExceptionHandler {
             errors.put(fieldName, message);
         });
         return errors;
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(MailSendException.class)
+    public ResponseEntity<String> handleNoFoundUserException(MailSendException e) {
+        return ResponseEntity.internalServerError().body(e.getMessage());
     }
 }

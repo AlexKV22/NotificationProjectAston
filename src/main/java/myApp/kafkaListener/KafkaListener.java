@@ -21,6 +21,6 @@ public class KafkaListener {
     public void listen(UserTempKafka userTempKafka) {
         logger.info("Получено raw сообщение: '{}'", userTempKafka);
         notificationService.sendNotification(userTempKafka);
-        logger.info("Kafka Consumer успешно принял сообщение и передал на отправку в сервис");
+        logger.debug("Kafka Consumer успешно принял сообщение и передал на отправку в сервис");
     }
 }
