@@ -1,7 +1,5 @@
 package myApp.service;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import myApp.exceptions.MailSendException;
 import myApp.userMessageKafka.UserMessageKafka;
 import org.slf4j.Logger;
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
         SimpleMailMessage message = new SimpleMailMessage();
         if (userMessageKafka.getCreateOrDelete().equals("Delete")) {
             message.setTo(userMessageKafka.getEmail());
+            message.setSubject("Удаление аккаунта");
             message.setFrom("OUR_DOMEN");
             message.setText("Здравствуйте! Ваш аккаунт был удалён.");
             try {
@@ -39,6 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
             }
         } else {
             message.setTo(userMessageKafka.getEmail());
+            message.setSubject("Создание аккаунта");
             message.setFrom("OUR_DOMEN");
             message.setText("Здравствуйте! Ваш аккаунт на сайте был успешно создан.");
             try {
