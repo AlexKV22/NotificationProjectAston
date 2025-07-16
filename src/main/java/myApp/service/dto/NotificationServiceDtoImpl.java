@@ -3,7 +3,7 @@ package myApp.service.dto;
 import myApp.dto.requestDto.RequestDto;
 import myApp.dto.responseDto.ResponseDto;
 import myApp.service.NotificationService;
-import myApp.userTempKafka.UserTempKafka;
+import myApp.userMessageKafka.UserMessageKafka;
 import myApp.converter.NotificationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ public class NotificationServiceDtoImpl implements NotificationServiceDto {
 
     @Override
     public ResponseDto sendNotification(RequestDto requestDto) {
-        UserTempKafka userTempKafka = notificationMapper.dtoToEntity(requestDto);
-        UserTempKafka response = notificationService.sendNotification(userTempKafka);
+        UserMessageKafka userMessageKafka = notificationMapper.dtoToEntity(requestDto);
+        UserMessageKafka response = notificationService.sendNotification(userMessageKafka);
         return notificationMapper.entityToDto(response);
     }
 }

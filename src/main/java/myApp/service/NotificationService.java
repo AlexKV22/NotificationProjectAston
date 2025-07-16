@@ -1,7 +1,7 @@
 package myApp.service;
 
-import myApp.userTempKafka.UserTempKafka;
+import myApp.userMessageKafka.UserMessageKafka;
 
 public interface NotificationService {
-    UserTempKafka sendNotification(UserTempKafka userTempKafka);
+    UserMessageKafka sendNotification(UserMessageKafka userMessageKafka);
 }

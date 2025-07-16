@@ -1,11 +1,10 @@
 package myApp.kafkaConsumer;
 
 import myApp.service.NotificationService;
-import myApp.userTempKafka.UserTempKafka;
+import myApp.userMessageKafka.UserMessageKafka;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,9 +18,9 @@ public class KafkaConsumer {
     }
 
     @org.springframework.kafka.annotation.KafkaListener(topics = "${app.kafka.topic}", groupId = "${app.kafka.groupId}")
-    public void listen(UserTempKafka userTempKafka) {
-        logger.info("Получено raw сообщение: '{}'", userTempKafka);
-        notificationService.sendNotification(userTempKafka);
+    public void listen(UserMessageKafka userMessageKafka) {
+        logger.info("Получено raw сообщение: '{}'", userMessageKafka);
+        notificationService.sendNotification(userMessageKafka);
         logger.debug("Kafka Consumer успешно принял сообщение и передал на отправку в сервис");
     }
 }

@@ -1,30 +1,29 @@
 package testApp.serviceTest;
 
 import myApp.App;
-import myApp.service.NotificationService;
-import myApp.userTempKafka.UserTempKafka;
+import myApp.service.NotificationServiceImpl;
+import myApp.userMessageKafka.UserMessageKafka;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
 
 
 @SpringBootTest(classes = App.class)
 class NotificationServiceTest {
-
-    @Mock
-    private JavaMailSender javaMailSender;
-
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
     private static Wiser wiser;
-
-    @InjectMocks
-    NotificationService notificationService;
+    @Autowired
+    private NotificationServiceImpl notificationServiceImpl;
 
     @BeforeAll
     static void setUp() {
@@ -41,18 +40,20 @@ class NotificationServiceTest {
     }
 
     @Test
-    void sendValidNotificationTest() {
-        UserTempKafka userTempKafka = new UserTempKafka("EMAIL", "Create");
-        UserTempKafka userTempKafkaResponse = notificationService.sendNotification(userTempKafka);
+    void sendValidNotificationTest() throws MessagingException, IOException {
+        UserMessageKafka userMessageKafka = new UserMessageKafka("EMAIL", "Create");
+        UserMessageKafka userMessageKafkaResponse = notificationServiceImpl.sendNotification(userMessageKafka);
         WiserMessage wiserMessage = wiser.getMessages().stream().findFirst().get();
+        String content = (String)wiserMessage.getMimeMessage().getContent();
         Assertions.assertNotNull(wiserMessage);
-        Assertions.assertEquals(wiserMessage.getEnvelopeReceiver(), userTempKafkaResponse.getEmail());
-        Assertions.assertEquals(userTempKafkaResponse.getCreateOrDelete(), "Произошло добавление нового юзера и уведомление на почту: EMAIL");
+        Assertions.assertEquals(wiserMessage.getEnvelopeReceiver(), userMessageKafkaResponse.getEmail());
+        Assertions.assertEquals("Здравствуйте! Ваш аккаунт на сайте был успешно создан.", content);
+
     }
 
     @Test
     void sendInvalidNotificationTest() {
-        UserTempKafka userTempKafka = new UserTempKafka(null, "Create");
-        Assertions.assertThrows(NullPointerException.class, () -> notificationService.sendNotification(userTempKafka));
+        UserMessageKafka userMessageKafka = new UserMessageKafka(null, "Create");
+        Assertions.assertThrows(NullPointerException.class, () -> notificationServiceImpl.sendNotification(userMessageKafka));
     }
 }
