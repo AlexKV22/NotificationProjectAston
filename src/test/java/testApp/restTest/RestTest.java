@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest
 @ContextConfiguration(classes = App.class)
-public class RestTest {
+class RestTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +43,7 @@ public class RestTest {
         ResponseDto responseDto = new ResponseDto("erttt", "Произошло добавление нового юзера и уведомление на почту: erttt");
         Mockito.when(notificationServiceDto.sendNotification(requestDto)).thenReturn(responseDto);
 
-        mockMvc.perform(post("/api/send").content(objectMapper.writeValueAsString(requestDto)).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api").content(objectMapper.writeValueAsString(requestDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.email").value("erttt")).andExpect(jsonPath("$.createOrDelete").value("Произошло добавление нового юзера и уведомление на почту: erttt"));
         Mockito.verify(notificationServiceDto, Mockito.times(1)).sendNotification(requestDto);
     }
@@ -51,7 +51,7 @@ public class RestTest {
     @Test
     void sendNotificationExceptionTest() throws Exception {
         RequestDto requestDto = new RequestDto(null, "Create");
-        mockMvc.perform(post("/api/send").content(objectMapper.writeValueAsString(requestDto)).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api").content(objectMapper.writeValueAsString(requestDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 }

@@ -22,7 +22,7 @@ public class NotificationController {
         this.notificationServiceDto = notificationServiceDto;
     }
 
-    @PostMapping("/send")
+    @PostMapping
     public ResponseEntity<ResponseDto> sendNotification(@Valid @RequestBody RequestDto requestDto) {
         ResponseDto responseDto = notificationServiceDto.sendNotification(requestDto);
         return ResponseEntity.ok(responseDto);
