@@ -3,10 +3,12 @@ package testApp.restTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import myApp.App;
+import myApp.converter.NotificationMapper;
 import myApp.dto.requestDto.RequestDto;
 import myApp.dto.responseDto.ResponseDto;
 import myApp.rest.NotificationController;
-import myApp.service.dto.NotificationServiceDto;
+import myApp.service.NotificationServiceImpl;
+import myApp.userMessageKafka.UserMessageKafka;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
@@ -32,20 +34,28 @@ class RestTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private NotificationServiceDto notificationServiceDto;
+    private NotificationServiceImpl notificationService;
+
+    @MockBean
+    private NotificationMapper notificationMapper;
 
     @InjectMocks
     private NotificationController notificationController;
 
+
     @Test
     void sendNotificationTest() throws Exception {
         RequestDto requestDto = new RequestDto("erttt", "Create");
+        UserMessageKafka userMessageKafka = new UserMessageKafka("erttt", "Create");
+        UserMessageKafka userMessageKafkaFromService = new UserMessageKafka("erttt", "Произошло добавление нового юзера и уведомление на почту: erttt");
         ResponseDto responseDto = new ResponseDto("erttt", "Произошло добавление нового юзера и уведомление на почту: erttt");
-        Mockito.when(notificationServiceDto.sendNotification(requestDto)).thenReturn(responseDto);
+        Mockito.when(notificationMapper.dtoToEntity(requestDto)).thenReturn(userMessageKafka);
+        Mockito.when(notificationService.sendNotification(userMessageKafka)).thenReturn(userMessageKafkaFromService);
+        Mockito.when(notificationMapper.entityToDto(userMessageKafkaFromService)).thenReturn(responseDto);
 
         mockMvc.perform(post("/api").content(objectMapper.writeValueAsString(requestDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.email").value("erttt")).andExpect(jsonPath("$.createOrDelete").value("Произошло добавление нового юзера и уведомление на почту: erttt"));
-        Mockito.verify(notificationServiceDto, Mockito.times(1)).sendNotification(requestDto);
+        Mockito.verify(notificationService, Mockito.times(1)).sendNotification(userMessageKafka);
     }
 
     @Test

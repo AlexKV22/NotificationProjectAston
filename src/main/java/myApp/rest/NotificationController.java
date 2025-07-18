@@ -1,9 +1,11 @@
 package myApp.rest;
 
 import jakarta.validation.Valid;
+import myApp.converter.NotificationMapper;
 import myApp.dto.requestDto.RequestDto;
 import myApp.dto.responseDto.ResponseDto;
-import myApp.service.dto.NotificationServiceDto;
+import myApp.service.NotificationService;
+import myApp.userMessageKafka.UserMessageKafka;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,16 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class NotificationController {
 
-    private final NotificationServiceDto notificationServiceDto;
+    private final NotificationService notificationService;
+    private final NotificationMapper notificationMapper;
 
     @Autowired
-    public NotificationController(NotificationServiceDto notificationServiceDto) {
-        this.notificationServiceDto = notificationServiceDto;
+    public NotificationController(NotificationService notificationService, NotificationMapper notificationMapper) {
+        this.notificationService = notificationService;
+        this.notificationMapper = notificationMapper;
     }
 
     @PostMapping
     public ResponseEntity<ResponseDto> sendNotification(@Valid @RequestBody RequestDto requestDto) {
-        ResponseDto responseDto = notificationServiceDto.sendNotification(requestDto);
+        UserMessageKafka userMessageKafka = notificationMapper.dtoToEntity(requestDto);
+        UserMessageKafka userMessageKafkaReady = notificationService.sendNotification(userMessageKafka);
+        ResponseDto responseDto = notificationMapper.entityToDto(userMessageKafkaReady);
         return ResponseEntity.ok(responseDto);
     }
 }

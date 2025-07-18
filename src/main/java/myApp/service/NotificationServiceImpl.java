@@ -2,9 +2,11 @@ package myApp.service;
 
 import myApp.exceptions.MailSendException;
 import myApp.userMessageKafka.UserMessageKafka;
+import myApp.util.SendPhrases;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class NotificationServiceImpl implements NotificationService {
     private final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
     private final JavaMailSender javaMailSender;
+    @Value("${app.mail.domen}")
+    private String domenName;
 
     @Autowired
     public NotificationServiceImpl(JavaMailSender javaMailSender) {
@@ -25,8 +29,8 @@ public class NotificationServiceImpl implements NotificationService {
         if (userMessageKafka.getCreateOrDelete().equals("Delete")) {
             message.setTo(userMessageKafka.getEmail());
             message.setSubject("Удаление аккаунта");
-            message.setFrom("OUR_DOMEN");
-            message.setText("Здравствуйте! Ваш аккаунт был удалён.");
+            message.setFrom(domenName);
+            message.setText(SendPhrases.DELETE_PHRASE.getPhrase());
             try {
                 javaMailSender.send(message);
                 logger.debug("Успешно было отправлено уведомление о удалении аккаунта на почту: {}", userMessageKafka.getEmail());
@@ -38,8 +42,8 @@ public class NotificationServiceImpl implements NotificationService {
         } else {
             message.setTo(userMessageKafka.getEmail());
             message.setSubject("Создание аккаунта");
-            message.setFrom("OUR_DOMEN");
-            message.setText("Здравствуйте! Ваш аккаунт на сайте был успешно создан.");
+            message.setFrom(domenName);
+            message.setText(SendPhrases.CREATE_PHRASE.getPhrase());
             try {
                 javaMailSender.send(message);
                 logger.debug("Успешно было отправлено уведомление о создании аккаунта на почту: {}", userMessageKafka.getEmail());
