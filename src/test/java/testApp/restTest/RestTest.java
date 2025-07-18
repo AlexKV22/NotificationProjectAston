@@ -4,28 +4,36 @@ package testApp.restTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import myApp.App;
 import myApp.converter.NotificationMapper;
+import myApp.converter.NotificationMapperImpl;
 import myApp.dto.requestDto.RequestDto;
 import myApp.dto.responseDto.ResponseDto;
 import myApp.rest.NotificationController;
-import myApp.service.NotificationServiceImpl;
+import myApp.service.NotificationService;
 import myApp.userMessageKafka.UserMessageKafka;
+import org.apache.coyote.Response;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @WebMvcTest
 @ContextConfiguration(classes = App.class)
 class RestTest {
+
+    @MockBean
+    private NotificationMapper notificationMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -34,10 +42,7 @@ class RestTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private NotificationServiceImpl notificationService;
-
-    @MockBean
-    private NotificationMapper notificationMapper;
+    private NotificationService notificationService;
 
     @InjectMocks
     private NotificationController notificationController;
@@ -52,7 +57,6 @@ class RestTest {
         Mockito.when(notificationMapper.dtoToEntity(requestDto)).thenReturn(userMessageKafka);
         Mockito.when(notificationService.sendNotification(userMessageKafka)).thenReturn(userMessageKafkaFromService);
         Mockito.when(notificationMapper.entityToDto(userMessageKafkaFromService)).thenReturn(responseDto);
-
         mockMvc.perform(post("/api").content(objectMapper.writeValueAsString(requestDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.email").value("erttt")).andExpect(jsonPath("$.createOrDelete").value("Произошло добавление нового юзера и уведомление на почту: erttt"));
         Mockito.verify(notificationService, Mockito.times(1)).sendNotification(userMessageKafka);

@@ -30,6 +30,7 @@ public class NotificationController {
     public ResponseEntity<ResponseDto> sendNotification(@Valid @RequestBody RequestDto requestDto) {
         UserMessageKafka userMessageKafka = notificationMapper.dtoToEntity(requestDto);
         UserMessageKafka userMessageKafkaReady = notificationService.sendNotification(userMessageKafka);
+        System.out.println(userMessageKafkaReady);
         ResponseDto responseDto = notificationMapper.entityToDto(userMessageKafkaReady);
         return ResponseEntity.ok(responseDto);
     }
