@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class NotificationExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -29,6 +30,7 @@ public class NotificationExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(MailSendException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleNoFoundUserException(MailSendException e) {
         return ResponseEntity.internalServerError().body(e.getMessage());
     }

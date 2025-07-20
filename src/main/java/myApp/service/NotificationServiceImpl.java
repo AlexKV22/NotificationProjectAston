@@ -28,7 +28,7 @@ public class NotificationServiceImpl implements NotificationService {
         SimpleMailMessage message = new SimpleMailMessage();
         if (userMessageKafka.getCreateOrDelete().equals("Delete")) {
             message.setTo(userMessageKafka.getEmail());
-            message.setSubject("Удаление аккаунта");
+            message.setSubject(SendPhrases.DELETE_PHRASE_SUBJECT.getPhrase());
             message.setFrom(domenName);
             message.setText(SendPhrases.DELETE_PHRASE.getPhrase());
             try {
@@ -41,7 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
             }
         } else {
             message.setTo(userMessageKafka.getEmail());
-            message.setSubject("Создание аккаунта");
+            message.setSubject(SendPhrases.CREATE_PHRASE_SUBJECT.getPhrase());
             message.setFrom(domenName);
             message.setText(SendPhrases.CREATE_PHRASE.getPhrase());
             try {
