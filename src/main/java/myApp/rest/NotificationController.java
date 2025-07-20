@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.validation.Valid;
+import myApp.assembler.NotificationModelAssembler;
 import myApp.converter.NotificationMapper;
 import myApp.dto.requestDto.RequestDto;
 import myApp.dto.responseDto.ResponseDto;
 import myApp.service.NotificationService;
 import myApp.userMessageKafka.UserMessageKafka;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,11 +31,13 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final NotificationMapper notificationMapper;
+    private final NotificationModelAssembler notificationModelAssembler;
 
     @Autowired
-    public NotificationController(NotificationService notificationService, NotificationMapper notificationMapper) {
+    public NotificationController(NotificationService notificationService, NotificationMapper notificationMapper, NotificationModelAssembler notificationModelAssembler) {
         this.notificationService = notificationService;
         this.notificationMapper = notificationMapper;
+        this.notificationModelAssembler = notificationModelAssembler;
     }
 
 
@@ -47,7 +51,7 @@ public class NotificationController {
             }
     )
     @PostMapping
-    public ResponseEntity<ResponseDto> sendNotification(
+    public ResponseEntity<EntityModel<ResponseDto>> sendNotification(
                 @Valid
                 @io.swagger.v3.oas.annotations.parameters.RequestBody (
                         description = "Структура запроса отправки письма",
@@ -60,7 +64,7 @@ public class NotificationController {
     ) {
         UserMessageKafka userMessageKafka = notificationMapper.dtoToEntity(requestDto);
         UserMessageKafka userMessageKafkaReady = notificationService.sendNotification(userMessageKafka);
-        ResponseDto responseDto = notificationMapper.entityToDto(userMessageKafkaReady);
-        return ResponseEntity.ok(responseDto);
+        EntityModel<ResponseDto> model = notificationModelAssembler.toModel(userMessageKafkaReady);
+        return ResponseEntity.ok(model);
     }
 }

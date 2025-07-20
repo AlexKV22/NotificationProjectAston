@@ -9,7 +9,6 @@ import myApp.service.NotificationServiceImpl;
 import myApp.userMessageKafka.UserMessageKafka;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
