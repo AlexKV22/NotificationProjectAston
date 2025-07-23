@@ -32,7 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
             message.setFrom(domenName);
             message.setText(SendPhrases.DELETE_PHRASE.getPhrase());
             try {
-                javaMailSender.send(message);
+//                javaMailSender.send(message);
                 logger.debug("Успешно было отправлено уведомление о удалении аккаунта на почту: {}", userMessageKafka.getEmail());
                 userMessageKafka.setCreateOrDelete(String.format("Произошло удаление аккаунта и уведомление на почту: %s", userMessageKafka.getEmail()));
             } catch (MailException e) {
@@ -45,7 +45,7 @@ public class NotificationServiceImpl implements NotificationService {
             message.setFrom(domenName);
             message.setText(SendPhrases.CREATE_PHRASE.getPhrase());
             try {
-                javaMailSender.send(message);
+//                javaMailSender.send(message);
                 logger.debug("Успешно было отправлено уведомление о создании аккаунта на почту: {}", userMessageKafka.getEmail());
                 userMessageKafka.setCreateOrDelete(String.format("Произошло добавление нового юзера и уведомление на почту: %s", userMessageKafka.getEmail()));
             } catch (MailException e) {
