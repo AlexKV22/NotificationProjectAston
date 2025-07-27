@@ -42,7 +42,6 @@ public class NotificationController {
 
 
 
-
     @Operation(summary = "Отправка сообщения",
             description = "Отправляет сообщение, возвращает ResponseDto ответа",
             responses = {

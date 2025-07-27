@@ -1,5 +1,6 @@
 package myApp.kafkaConsumer;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import myApp.service.NotificationService;
 import myApp.userMessageKafka.UserMessageKafka;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ public class KafkaConsumer {
     @Autowired
     public KafkaConsumer(NotificationService notificationService) {
         this.notificationService = notificationService;
-        System.err.println("KafkaConsumer инициализирован");
     }
 
     @org.springframework.kafka.annotation.KafkaListener(topics = "${app.kafka.topic}", groupId = "${app.kafka.groupId}")

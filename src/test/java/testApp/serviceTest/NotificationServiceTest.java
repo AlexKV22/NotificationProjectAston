@@ -5,6 +5,9 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import myApp.App;
+import myApp.emailSender.EmailSender;
+import myApp.exceptions.InvalidArgumentException;
+import myApp.exceptions.MailSendException;
 import myApp.service.NotificationServiceImpl;
 import myApp.userMessageKafka.UserMessageKafka;
 import org.junit.jupiter.api.Assertions;
@@ -23,6 +26,9 @@ class NotificationServiceTest {
 
     @Autowired
     private JavaMailSenderImpl mailSender;
+
+    @Autowired
+    private EmailSender emailSender;
 
     @Autowired
     private NotificationServiceImpl notificationServiceImpl;
@@ -45,6 +51,6 @@ class NotificationServiceTest {
     @Test
     void sendInvalidNotificationTest() {
         UserMessageKafka userMessageKafka = new UserMessageKafka(null, "Create");
-        Assertions.assertThrows(NullPointerException.class, () -> notificationServiceImpl.sendNotification(userMessageKafka));
+        Assertions.assertThrows(InvalidArgumentException.class, () -> notificationServiceImpl.sendNotification(userMessageKafka));
     }
 }

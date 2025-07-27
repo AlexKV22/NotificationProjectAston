@@ -1,5 +1,6 @@
 package myApp.exceptionHandler;
 
+import myApp.exceptions.InvalidArgumentException;
 import myApp.exceptions.MailSendException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,11 @@ public class NotificationExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleNoFoundUserException(MailSendException e) {
         return ResponseEntity.internalServerError().body(e.getMessage());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(InvalidArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleNoFoundUserException(InvalidArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
