@@ -16,6 +16,7 @@ public class KafkaConsumer {
     @Autowired
     public KafkaConsumer(NotificationService notificationService) {
         this.notificationService = notificationService;
+        System.err.println("KafkaConsumer инициализирован");
     }
 
     @org.springframework.kafka.annotation.KafkaListener(topics = "${app.kafka.topic}", groupId = "${app.kafka.groupId}")

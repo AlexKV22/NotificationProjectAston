@@ -13,23 +13,23 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 
 @SpringBootTest(classes = App.class)
-@ActiveProfiles("test")
 class NotificationServiceTest {
+
     @Autowired
-    private JavaMailSenderImpl javaMailSender;
+    private JavaMailSenderImpl mailSender;
 
     @Autowired
     private NotificationServiceImpl notificationServiceImpl;
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP);
+
 
     @Test
     void sendValidNotificationTest() throws MessagingException, IOException {
