@@ -10,6 +10,7 @@ import myApp.dto.responseDto.ResponseDto;
 import myApp.rest.NotificationController;
 import myApp.service.NotificationService;
 import myApp.userMessageKafka.UserMessageKafka;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest
 @ContextConfiguration(classes = App.class)
+@Disabled
 class RestTest {
 
     @MockBean

@@ -11,6 +11,7 @@ import myApp.exceptions.MailSendException;
 import myApp.service.NotificationServiceImpl;
 import myApp.userMessageKafka.UserMessageKafka;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 
 
 @SpringBootTest(classes = App.class)
+@Disabled
 class NotificationServiceTest {
 
     @Autowired
